@@ -118,3 +118,29 @@ export const signIn = async (req, res) => {
         return res.status(500).json({ message: "System-Fehler" })
     }
 };
+
+export const signOut = async (req, res) => {
+    try {
+        //refresh-Token aus Cookie nehmen, nutzen cooke-parse
+        const token = req.cookies?.refreshToken;
+
+        // refresh Token im Session löschen
+        if (token) {
+            await Session.deleteOne({ refreshToken: token });
+        }
+
+        // Cookie löschen
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none'
+        });
+
+        return res.sendStatus(204);
+
+
+    } catch (error) {
+        console.log(`Fehrler bei Abmeldung`, error);
+        return res.status(500).json({ message: "System-Fehler" });
+    }
+};
