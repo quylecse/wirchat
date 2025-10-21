@@ -7,12 +7,10 @@ import userRoute from './routes/userRoute.js';
 import cookieParser from "cookie-parser";
 
 dotenv.config();
-//create an express 
 const app = express();
 
-//create PORT
+//PORT erzeugen
 const PORT = process.env.PORT || 5001;
-
 
 //middlewares
 app.use(express.json());

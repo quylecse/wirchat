@@ -77,7 +77,7 @@ export const signIn = async (req, res) => {
                 .status(401)
                 .json({ message: "Falsches Passwort." })
         }
-        // wenn stimmt, ein accessToken mit JWT erstellen (accesToken -> accessToken)
+        // wenn stimmt, ein accessToken mit JWT erstellen
         const accessToken = jwt.sign(
             { userId: user._id },
             process.env.ACCESS_TOKEN_SECRET,
@@ -109,7 +109,7 @@ export const signIn = async (req, res) => {
         // das access-Token an Benutzer im Response senden
         return res.status(200).json({
             message: `Benutzer ${user.displayName} hat sich angemeldet!`,
-            accessToken // accesToken -> accessToken
+            accessToken
         });
 
 
