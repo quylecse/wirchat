@@ -46,7 +46,7 @@ export const signUp = async (req, res) => {
         return res.status(201).json({ message: `Benutzer ${newUser.username} erfolgreich erstellt` });
 
     } catch (error) {
-        console.log("Fehrler bei Registrierung", error);
+        console.log("Fehler bei Registrierung", error);
         return res.status(500).json({ message: "System-Fehler" })
 
     }
@@ -77,9 +77,9 @@ export const signIn = async (req, res) => {
                 .status(401)
                 .json({ message: "Falsches Passwort." })
         }
-        // wenn stimmt, ein accessToken mit JWT erstellen
+        // wenn stimmt, ein accessToken mit JWT erstellen (accesToken -> accessToken)
         const accessToken = jwt.sign(
-            { userID: user._id },
+            { userId: user._id },
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: ACCESS_TOKEN_TTL },
         );
@@ -89,7 +89,7 @@ export const signIn = async (req, res) => {
 
         // eine neue Sitzung erstellen und das refresh Token hineinspeichern
         await Session.create({
-            userID: user._id,
+            userId: user._id,
             refreshToken,
             expireAt: new Date(Date.now() + REFRESH_TOKEN_TTL)
         });
@@ -109,12 +109,12 @@ export const signIn = async (req, res) => {
         // das access-Token an Benutzer im Response senden
         return res.status(200).json({
             message: `Benutzer ${user.displayName} hat sich angemeldet!`,
-            accessToken
+            accessToken // accesToken -> accessToken
         });
 
 
     } catch (error) {
-        console.log("Fehrler bei Anmeldung", error);
+        console.log("Fehler bei Anmeldung", error);
         return res.status(500).json({ message: "System-Fehler" })
     }
 };
@@ -140,7 +140,7 @@ export const signOut = async (req, res) => {
 
 
     } catch (error) {
-        console.log(`Fehrler bei Abmeldung`, error);
+        console.log(`Fehler bei Abmeldung`, error);
         return res.status(500).json({ message: "System-Fehler" });
     }
 };

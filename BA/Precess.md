@@ -31,4 +31,12 @@
         + logik für Authentifizierung schreiben (authController.js) 
         + logik für Anlegung neuer Benutzer schreiben (authController.js) 
     + Route zur Anmeldung mit username und password
-     
+    + Route zur Abmeldung
+        + refresh Token im DB löschen
+        + refresh Token im Cookie löschen
+
+**6.Schritt**
+- Benutzerberechtigung
+    + private Route für Benutzer
+    + Benutzerberechtigung durch Middleware  
+    + Verwendung von Middleware

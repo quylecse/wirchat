@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { connectDB } from './libs/db.js';
 import authRoute from './routes/authRoute.js';
+import { protectedRoute } from './middlewares/authMiddleware.js';
+import userRoute from './routes/userRoute.js';
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -21,6 +23,8 @@ app.use(cookieParser());
 app.use('/api/auth', authRoute);
 
 //private routes
+app.use(protectedRoute)
+app.use('/api/users', userRoute)
 
 
 connectDB()
