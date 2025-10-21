@@ -28,7 +28,7 @@
 - Chat-Gruppe ( >2 Mitglieder) anlegen:
     - Mitglied einladen
 
-- Datei / Bilder senden
+- Datei / Bilder senden (Bilder auf Cloudynary speichern)
 - Echtzeit-Push neuer Nachricht
 - letzte Nachricht ansehen, Timestamp ansehen
 - paginate bei Überladung alter Nachrichten
