@@ -40,3 +40,10 @@
     + private Route für Benutzer
     + Benutzerberechtigung durch Middleware  
     + Verwendung von Middleware
+
+    
+**7.Schritt**
+- Frontend implementieren
+    + Pages für SignIn, SignOut, Chat App
+    + Form behandeln (Eingabe prüfen, Datentyp prüfen)
+    + CSS 

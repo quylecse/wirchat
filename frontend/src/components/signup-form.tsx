@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label"
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useAuthStore } from "@/stores/useAuthStore"
+import { useNavigate } from "react-router-dom"
 
 const signUpSchema = z.object({
   firstname: z.string().min(1, 'Bitte geben Sie einen Vornamen ein'),
@@ -19,22 +21,29 @@ const signUpSchema = z.object({
 
 type SignUpFormValues = z.infer<typeof signUpSchema>
 
-
-
 export function SignUpForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
 
+  const { signUp } = useAuthStore();
+  const navigate = useNavigate();
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema)
   });
 
-  const onSubmit = async () => {
-
+  const onSubmit = async (data: SignUpFormValues) => {
+    try {
+      // das gesamte Datenobjekt wir übergeben
+      await signUp({ username: data.username, password: data.password, email: data.email, firstName: data.firstname, lastName: data.lastname });
+      navigate('/signin');
+    } catch (error) {
+      // Der Fehler wird bereits im Store behandelt (toast.error).
+      // Wir fangen den Fehler hier ab, um die Navigation zu verhindern.
+      console.error("Registrierung fehlgeschlagen, Weiterleitung verhindert.", error);
+    }
   }
-
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0 ">
@@ -51,6 +60,7 @@ export function SignUpForm({
                 </p>
               </div>
               {/* Name */}
+              {/* Nutzt die Methode register aus react-hook-form um Input mit der verwaltenen Bibliothek zu verbinden */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label htmlFor="firstname" className="block text-sm">Vorname</Label>
@@ -75,15 +85,15 @@ export function SignUpForm({
               {/* Benutzername */}
               <div className="flex flex-col gap-3">
                 <Label htmlFor="username" className="block text-sm">Benutzername</Label>
-                <Input id="username" type="text" placeholder="m.max2025" required {...register('username')} />
+
+                <Input id="username" type="text" placeholder="max2025" required {...register('username')} />
                 {errors.username && (
                   <p className="text-destructive text-sm" >
                     {errors.username.message}
                   </p>
                 )}
-
-
               </div>
+
               {/* email */}
               <div className="flex flex-col gap-3">
                 <Label htmlFor="email" className="block text-sm">Email</Label>
