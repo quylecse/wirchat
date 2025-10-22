@@ -21,7 +21,7 @@ type SignUpFormValues = z.infer<typeof signUpSchema>
 
 
 
-export function SignupForm({
+export function SignUpForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -29,6 +29,7 @@ export function SignupForm({
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema)
   });
+
   const onSubmit = async () => {
 
   }
