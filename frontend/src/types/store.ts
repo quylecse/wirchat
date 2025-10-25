@@ -5,6 +5,7 @@ export interface AuthState {
   user: User | null;
   loading: boolean;
 
+  setAccessToken: (accessToken: string) => void;
   clearState: () => void;
 
   signUp: (data: {
@@ -18,5 +19,6 @@ export interface AuthState {
   signIn: (data: { username: string; password: string }) => Promise<void>;
 
   signOut: () => Promise<void>;
-  fetchMe: (token?: string | null) => Promise<void>;
+  fetchMe: () => Promise<void>;
+  refresh: () => Promise<void>;
 }

@@ -9,6 +9,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   loading: false,
 
+  setAccessToken: (accessToken) => {
+    set({ accessToken });
+  },
   clearState: () => {
     set({ accessToken: null, user: null, loading: false });
   },
@@ -38,9 +41,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       set({ loading: true });
       const { accessToken } = await authService.signIn(data);
-      set({ accessToken });
-      // Übergebe den neuen Token direkt an fetchMe, um Race Conditions zu vermeiden
-      await get().fetchMe(accessToken);
+      get().setAccessToken(accessToken);
+      // Der Interceptor kümmert sich jetzt um den Token.
+      await get().fetchMe();
       toast.success("Herzlich wilkommen");
     } catch (error) {
       console.log(error);
@@ -68,15 +71,31 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
   // Akzeptiert optional einen Token, um ihn sofort zu verwenden
-  fetchMe: async (token) => {
+  fetchMe: async () => {
     try {
-      const user = await authService.fetchMe(token);
-      set({ user, accessToken: token || get().accessToken || "restored" });
+      const user = await authService.fetchMe();
+      set({ user });
     } catch (error) {
       console.log(error);
       // Setze nur den Benutzer zurück, lösche nicht den gerade erhaltenen Token
       set({ user: null });
       throw error;
+    }
+  },
+  refresh: async () => {
+    try {
+      set({ loading: true });
+      // Der Backend-Endpunkt /refresh gibt jetzt sowohl Token als auch Benutzer zurück.
+      const { accessToken, user } = await authService.refresh();
+      set({ accessToken, user });
+    } catch (error) {
+      console.error(error);
+      toast.error("Sitzung ist aufgelaufen, bitte erneut anmelden.");
+      get().clearState();
+      // Wirf den Fehler erneut, damit Komponenten wie ProtectedRoute darauf reagieren können.
+      throw error;
+    } finally {
+      set({ loading: false });
     }
   },
 }));

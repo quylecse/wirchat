@@ -24,15 +24,12 @@ export const authService = {
     await api.post("/auth/signout", {}, { withCredentials: true });
   },
 
-  fetchMe: async (token?: string | null): Promise<User> => {
-    const headers: Record<string, string> = {};
-    // Wenn ein Token direkt übergeben wird, verwende es für den Header.
-    // Dies ist entscheidend, um die Race Condition nach dem Anmelden zu beheben.
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    const res = await api.get("/user/me", { headers, withCredentials: true });
-    return res.data.user; // Korrektur: Das Benutzerobjekt aus der Antwort extrahieren
+  fetchMe: async (): Promise<User> => {
+    const res = await api.get("/user/me", { withCredentials: true });
+    return res.data.user;
+  },
+  refresh: async (): Promise<{ accessToken: string; user: User }> => {
+    const res = await api.post("/auth/refresh", {}, { withCredentials: true });
+    return res.data;
   },
 };
